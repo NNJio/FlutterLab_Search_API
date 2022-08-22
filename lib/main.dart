@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   onSearch(String search) {
-    print(search);
+    _foundedUser = _users.where((user) => user.name.toLowerCase().contains(search)).toList();
   }
 
   @override
@@ -125,6 +125,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Container(
         color: Colors.grey.shade900,
+        child: ListView.builder(
+            itemCount: _foundedUser.length,
+            itemBuilder: (context, index) {
+              return userComponent(user: _foundedUser[index]);
+            }),
       ),
     );
   }
@@ -136,27 +141,25 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Container(
+          Row(children: [
+            Container(
                 width: 60,
                 height: 60,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(50),
                   child: Image.network(user.image),
-                )
+                )),
+            SizedBox(width: 10),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(user.name,
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w500)),
+              SizedBox(
+                height: 5,
               ),
-              SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(user.name, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
-                  SizedBox(height: 5,),
-                  Text(user.username, style: TextStyle(color: Colors.grey[500])),
-                ]
-              )
-            ]
-          ),
+              Text(user.username, style: TextStyle(color: Colors.grey[500])),
+            ])
+          ]),
           GestureDetector(
             onTap: () {
               setState(() {
@@ -164,23 +167,28 @@ class _MyHomePageState extends State<MyHomePage> {
               });
             },
             child: AnimatedContainer(
-              height: 35,
-              width: 110,
-              duration: Duration(milliseconds: 300),
-              decoration: BoxDecoration(
-                color: user.isFollowedByMe ? Colors.blue[700] : Color(0xffffff),
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: user.isFollowedByMe ? Colors.transparent : Colors.grey.shade700,)
-              ),
-              child: Center(
-                child: Text(user.isFollowedByMe ? 'Unfollow' : 'Follow', style: TextStyle(color: user.isFollowedByMe ? Colors.white : Colors.white))
-              )
-            ),
+                height: 35,
+                width: 110,
+                duration: Duration(milliseconds: 300),
+                decoration: BoxDecoration(
+                    color: user.isFollowedByMe
+                        ? Colors.blue[700]
+                        : Color(0xffffff),
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(
+                      color: user.isFollowedByMe
+                          ? Colors.transparent
+                          : Colors.grey.shade700,
+                    )),
+                child: Center(
+                    child: Text(user.isFollowedByMe ? 'Unfollow' : 'Follow',
+                        style: TextStyle(
+                            color: user.isFollowedByMe
+                                ? Colors.white
+                                : Colors.white)))),
           )
         ],
       ),
     );
   }
-
-
 }

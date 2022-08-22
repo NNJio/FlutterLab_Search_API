@@ -4,9 +4,5 @@ class User {
   final String image;
   bool isFollowedByMe;
 
-  User(
-    this.name, 
-    this.username, 
-    this.image, 
-    this.isFollowedByMe);
+  User(this.name, this.username, this.image, this.isFollowedByMe);
 }
