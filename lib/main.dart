@@ -92,6 +92,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  onSearch(String search) {
+    print(search);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,21 +105,22 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Container(
           height: 38,
           child: TextField(
+            onChanged: (value) => onSearch(value),
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.grey[850],
               contentPadding: EdgeInsets.all(0),
-              prefixIcon: Icon(Icons.search,color: Colors.grey.shade500,),
+              prefixIcon: Icon(
+                Icons.search,
+                color: Colors.grey.shade500,
+              ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(50),
-                borderSide: BorderSide.none
-              ),
-              hintStyle: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade500
-              ),
+                  borderRadius: BorderRadius.circular(50),
+                  borderSide: BorderSide.none),
+              hintStyle: TextStyle(fontSize: 14, color: Colors.grey.shade500),
               hintText: "ค้นหาผู้ใช้",
-            ),),
+            ),
+          ),
         ),
       ),
       body: Container(
@@ -123,4 +128,59 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  userComponent({required User user}) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.only(top: 10, bottom: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Image.network(user.image),
+                )
+              ),
+              SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(user.name, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+                  SizedBox(height: 5,),
+                  Text(user.username, style: TextStyle(color: Colors.grey[500])),
+                ]
+              )
+            ]
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                user.isFollowedByMe = !user.isFollowedByMe;
+              });
+            },
+            child: AnimatedContainer(
+              height: 35,
+              width: 110,
+              duration: Duration(milliseconds: 300),
+              decoration: BoxDecoration(
+                color: user.isFollowedByMe ? Colors.blue[700] : Color(0xffffff),
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: user.isFollowedByMe ? Colors.transparent : Colors.grey.shade700,)
+              ),
+              child: Center(
+                child: Text(user.isFollowedByMe ? 'Unfollow' : 'Follow', style: TextStyle(color: user.isFollowedByMe ? Colors.white : Colors.white))
+              )
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+
 }
